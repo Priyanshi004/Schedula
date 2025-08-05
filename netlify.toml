@@ -1,9 +1,11 @@
 [build]
   command = "npm run build"
-  publish = ".next"  # or leave empty
+  publish = ".next"
 
 [dev]
-  command = "next dev"
+  command = "npm run dev"
+  targetPort = 3000
+  autoLaunch = false
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
