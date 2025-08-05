@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "dist"  # or leave empty
+  publish = ".next"  # or leave empty
 
 [dev]
   command = "next dev"

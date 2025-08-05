@@ -1,0 +1,29 @@
+[
+  {
+    "id": "1",
+    "name": "Priya Sharma",
+    "age": "29",
+    "mobile": "9876543210",
+    "date": "2025-08-01",
+    "time": "10:00",
+    "status": "confirmed"
+  },
+  {
+    "id": "2",
+    "name": "Ravi Kumar",
+    "age": "35",
+    "mobile": "9123456789",
+    "date": "2025-08-01",
+    "time": "11:00",
+    "status": "waiting"
+  },
+  {
+    "id": "3",
+    "name": "Sneha Kapoor",
+    "age": "40",
+    "mobile": "9876512345",
+    "date": "2025-08-01",
+    "time": "12:00",
+    "status": "rescheduled"
+  }
+]

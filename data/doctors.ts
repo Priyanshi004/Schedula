@@ -1,0 +1,32 @@
+export const doctors = [
+  {
+    id: 1,
+    name: "Dr. Sanket Das",
+    specialization: "Sr. Psychologist",
+    available: true,
+    availabilityText: "Available today",
+    time: "09:30 AM–07:00 PM",
+    experience: "As Psychologist Dr das practices about 7+ years...",
+    image: "/images/doc1.webp",
+   },
+   {
+    id: 2,
+    name: "Dr. Sanket Atkari",
+    specialization: "Sr. Psychologist",
+    available: true,
+    availabilityText: "Available today",
+    time: "09:30 AM–07:00 PM",
+    experience: "As Psychologist Dr atkari practices about 5+ years...",
+    image: "/images/doc2.jpg",
+  },
+  {
+    id: 3,
+    name: "Dr. Prakash Das",
+    specialization: "Sr. Psychologist",
+    available: false,
+    availabilityText: "Not available",
+    time: "09:30 AM-07:00 PM",
+    experience: "As Psychologist Dr das practices about 4+ years...",
+    image: "/images/doc3.jpg",
+  },
+];
