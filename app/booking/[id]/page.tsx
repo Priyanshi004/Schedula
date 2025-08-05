@@ -129,7 +129,7 @@ const timeSlots = {
 }
 
 export default function DoctorBookingPage() {
-  const { id } = useParams()
+  const { id } = useParams() as { id: string }
   const router = useRouter()
   const doctor = doctors.find((d) => d.id === id as string)
 

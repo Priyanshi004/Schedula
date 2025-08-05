@@ -9,7 +9,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   const hideBottomNavOnRoutes = ['/login']
 
-  const shouldShowBottomNav = !hideBottomNavOnRoutes.includes(pathname)
+  const shouldShowBottomNav = !hideBottomNavOnRoutes.includes(pathname || '')
+
 
   return (
     <>

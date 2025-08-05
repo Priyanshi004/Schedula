@@ -3,10 +3,9 @@ import {
   type ToastProps,
 } from "components/ui/toast";
 
-import { useToast as useSonnerToast } from "sonner";
+import { toast } from "sonner";
 
 export function useToast() {
-  const { toast } = useSonnerToast();
   return {
     toast,
   };
