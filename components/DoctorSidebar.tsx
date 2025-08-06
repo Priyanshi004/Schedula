@@ -27,6 +27,11 @@ const links = [
     icon: <FaBoxes />,
   },
   {
+    label: "Prescriptions",
+    href: "/dashboard/doctor/prescriptions",
+    icon: <FaClipboardList />,
+  },
+  {
     label: "Communication",
     href: "/dashboard/doctor/communication",
     icon: <MdCellTower/>
