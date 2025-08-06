@@ -1,0 +1,45 @@
+[
+  {
+    "id": "pres-1",
+    "patientId": "pat-1",
+    "patientName": "John Doe",
+    "appointmentId": "apt-1",
+    "doctorId": "doc-1",
+    "doctorName": "Dr. Smith",
+    "medicineName": "Paracetamol",
+    "dosage": "500mg",
+    "duration": "7 days",
+    "notes": "Take after meals",
+    "createdAt": "2025-08-01T10:00:00Z",
+    "updatedAt": "2025-08-06T12:20:40.691Z",
+    "status": "active"
+  },
+  {
+    "id": "pres-2",
+    "patientId": "pat-2",
+    "patientName": "Jane Smith",
+    "appointmentId": "apt-2",
+    "doctorId": "doc-1",
+    "doctorName": "Dr. Smith",
+    "medicineName": "Amoxicillin",
+    "dosage": "250mg",
+    "duration": "10 days",
+    "notes": "Take with food",
+    "createdAt": "2025-08-02T14:30:00Z",
+    "updatedAt": "2025-08-02T14:30:00Z",
+    "status": "active"
+  },
+  {
+    "patientId": "1542154",
+    "patientName": "Priyanshi",
+    "medicineName": "Naxdom",
+    "dosage": "500mg",
+    "duration": "7 days",
+    "notes": "",
+    "doctorId": "doc-1",
+    "doctorName": "Dr. Smith",
+    "id": "pres-1754484333989-5805tt48c",
+    "createdAt": "2025-08-06T12:45:33.989Z",
+    "updatedAt": "2025-08-06T12:45:33.989Z"
+  }
+]
