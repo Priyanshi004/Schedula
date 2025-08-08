@@ -6,7 +6,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
 
 import moment from 'moment'
-import { Appointment } from '@/types/appointment'
+import { Appointment } from '@/types'
+
 
 
 const localizer = momentLocalizer(moment)
@@ -15,7 +16,7 @@ const DnDCalendar = withDragAndDrop<Appointment>(Calendar)
 export interface WeeklyCalendarProps {
   appointments: Appointment[]
   onDrop: (appointment: Appointment) => void
-  onSelect: (appointment: Appointment) => void
+  onSelect: (appointment: Partial<Appointment>) => void
 }
 
 export default function WeeklyCalendar({
@@ -23,17 +24,17 @@ export default function WeeklyCalendar({
   onDrop,
   onSelect,
 }: WeeklyCalendarProps) {
-  const handleDrop = ({ event }: { event: object }) => {
-    const appointment = event as Appointment
-    onDrop(appointment)
-  }
+  const handleDrop = (data: { event: Appointment; start: string | Date; end: string | Date }) => {
+    const { event, start, end } = data;
+    onDrop({ ...event, start: new Date(start), end: new Date(end) });
+  };
 
   const handleSelect = (event: object) => {
-    const appointment = event as Appointment
-    onSelect(appointment)
-  }
+    onSelect(event as Partial<Appointment>);
+  };
 
-  const eventPropGetter = (event: Appointment) => {
+  const eventPropGetter = (event: object) => {
+    const appointment = event as Appointment;
     const colorMap: Record<string, string> = {
       scheduled: '#38bdf8',  // sky blue
       completed: '#22c55e',  // emerald
@@ -42,7 +43,7 @@ export default function WeeklyCalendar({
       confirmed: '#8b5cf6',  // violet
     }
 
-    const bgColor = colorMap[event.status] || '#e5e7eb' // fallback gray
+    const bgColor = colorMap[appointment.status] || '#e5e7eb' // fallback gray
     return {
       style: {
         backgroundColor: bgColor,

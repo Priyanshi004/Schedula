@@ -19,7 +19,8 @@ import {
   FaBone,
   FaTooth,
   FaEye
-} from 'react-icons/fa'
+} from 'react-icons/fa';
+import BottomNavigation from '@/components/BottomNavigation';
 
 type Doctor = {
   id: string
@@ -160,32 +161,45 @@ export default function DoctorBookingPage() {
     )
   }
 
-  const handleBooking = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleBooking = async (e: React.FormEvent) => {
+    e.preventDefault();
 
     const appointment = {
+      id: `apt-${Date.now()}`,
       name,
       email,
-      doctor: doctor.name,
+      doctorName: doctor.name,
       specialty: doctor.specialty,
       date: selectedDate,
-      slot: selectedSlot,
+      time: selectedSlot,
       notes,
-      status: 'Booked',
+      status: 'upcoming',
+      patientId: `pat-${Date.now()}`,
+    };
+
+    try {
+      const response = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(appointment),
+      });
+
+      if (response.ok) {
+        toast.success('Appointment booked successfully!');
+        setStep(3);
+      } else {
+        toast.error('Failed to book appointment.');
+      }
+    } catch (error) {
+      toast.error('An error occurred while booking the appointment.');
     }
-
-    const existing = JSON.parse(localStorage.getItem('appointments') || '[]')
-    localStorage.setItem('appointments', JSON.stringify([...existing, appointment]))
-
-    toast.success('Appointment booked successfully!')
-    setStep(3)
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-100">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-sky-600/5 to-indigo-600/5"></div>
-      
-      <div className="relative max-w-4xl mx-auto px-4 py-8">
+    <div className="bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-100">
+      <div className="relative max-w-4xl mx-auto px-4 py-8 pb-24">
         {/* Back Button */}
         <motion.button
           onClick={() => router.back()}
@@ -516,6 +530,7 @@ export default function DoctorBookingPage() {
           </motion.div>
         )}
       </div>
+      <BottomNavigation />
     </div>
-  )
+  );
 }

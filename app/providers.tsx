@@ -2,7 +2,7 @@
 'use client'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { Toaster } from 'react-hot-toast'
+import ToasterProvider from '@/components/ToasterProvider';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -10,7 +10,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Toaster />
+      <ToasterProvider />
       {children}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

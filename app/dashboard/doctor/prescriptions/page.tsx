@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import { Prescription } from '@/types/prescription';
 import { PrescriptionList } from '@/components/PrescriptionList';
 import { PrescriptionForm } from '@/components/PrescriptionForm';
+import { PrescriptionPreview } from '@/components/PrescriptionPreview';
 import { FaClipboardList, FaSearch, FaPlus, FaFilter } from 'react-icons/fa';
 
 export default function PrescriptionsPage() {
@@ -14,7 +16,9 @@ export default function PrescriptionsPage() {
   const [patientFilter, setPatientFilter] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingPrescription, setEditingPrescription] = useState<Prescription | null>(null);
+  const [viewingPrescription, setViewingPrescription] = useState<Prescription | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Fetch prescriptions from API
   useEffect(() => {
@@ -59,6 +63,10 @@ export default function PrescriptionsPage() {
     setShowForm(true);
   };
 
+  const handleViewPrescription = (prescription: Prescription) => {
+    setViewingPrescription(prescription);
+  };
+
   const handleDeletePrescription = async (id: string) => {
     try {
       const response = await fetch(`/api/prescriptions/${id}`, {
@@ -68,17 +76,18 @@ export default function PrescriptionsPage() {
       if (response.ok) {
         // Remove prescription from state
         setPrescriptions(prev => prev.filter(prescription => prescription.id !== id));
-        alert('Prescription deleted successfully');
+        toast.success('Prescription deleted successfully');
       } else {
-        alert('Failed to delete prescription');
+        toast.error('Failed to delete prescription');
       }
     } catch (error) {
       console.error('Error deleting prescription:', error);
-      alert('Error deleting prescription');
+      toast.error('Error deleting prescription');
     }
   };
 
   const handleSavePrescription = async (prescriptionData: Partial<Prescription>) => {
+    setIsSaving(true);
     try {
       if (editingPrescription) {
         // Update existing prescription
@@ -97,9 +106,9 @@ export default function PrescriptionsPage() {
           );
           setShowForm(false);
           setEditingPrescription(null);
-          alert('Prescription updated successfully');
+          toast.success('Prescription updated successfully');
         } else {
-          alert('Failed to update prescription');
+          toast.error('Failed to update prescription');
         }
       } else {
         // Create new prescription
@@ -120,15 +129,17 @@ export default function PrescriptionsPage() {
           const newPrescription = await response.json();
           setPrescriptions(prev => [...prev, newPrescription]);
           setShowForm(false);
-          alert('Prescription created successfully');
+          toast.success('Prescription created successfully');
         } else {
           const errorData = await response.json();
-          alert(`Failed to create prescription: ${errorData.error}`);
+          toast.error(`Failed to create prescription: ${errorData.error}`);
         }
       }
     } catch (error) {
       console.error('Error saving prescription:', error);
-      alert('Error saving prescription');
+      toast.error('Error saving prescription');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -250,53 +261,54 @@ export default function PrescriptionsPage() {
       </div>
 
       {/* Prescription List */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 overflow-hidden">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">
-            Prescriptions
-          </h2>
-          <p className="text-gray-600 text-sm mt-1">
-            {filteredPrescriptions.length} prescriptions {patientFilter ? 'found' : 'total'}
-          </p>
+      {!viewingPrescription && (
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 overflow-hidden">
+          <div className="p-6 border-b border-gray-200">
+            <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">
+              Prescriptions
+            </h2>
+            <p className="text-gray-600 text-sm mt-1">
+              {filteredPrescriptions.length} prescriptions {patientFilter ? 'found' : 'total'}
+            </p>
+          </div>
+          
+          <div className="p-6">
+            <PrescriptionList
+              prescriptions={filteredPrescriptions}
+              onEdit={handleEditPrescription}
+              onDelete={handleDeletePrescription}
+              onView={handleViewPrescription}
+              grouping={grouping}
+            />
+          </div>
         </div>
-        
-        <div className="p-6">
-          <PrescriptionList
-            prescriptions={filteredPrescriptions}
-            onEdit={handleEditPrescription}
-            onDelete={handleDeletePrescription}
-            grouping={grouping}
-          />
-        </div>
-      </div>
+      )}
 
       {/* Add/Edit Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 overflow-y-auto">
           <motion.div
-            className="bg-white rounded-3xl shadow-2xl w-full max-w-md"
+            className="w-full max-w-2xl"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Form Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-sky-600 p-6 text-white rounded-t-3xl">
-              <h2 className="text-xl font-bold">
-                {editingPrescription ? 'Edit Prescription' : 'Add New Prescription'}
-              </h2>
-              <p className="text-blue-100 text-sm">Enter prescription information</p>
-            </div>
-
-            {/* Form */}
-            <div className="p-6">
-              <PrescriptionForm
-                prescription={editingPrescription || undefined}
-                onSave={handleSavePrescription}
-                onCancel={handleCloseForm}
-              />
-            </div>
+            <PrescriptionForm
+              prescription={editingPrescription || undefined}
+              onSave={handleSavePrescription}
+              onCancel={handleCloseForm}
+              isLoading={isSaving}
+            />
           </motion.div>
         </div>
+      )}
+
+      {/* Prescription Preview */}
+      {viewingPrescription && (
+        <PrescriptionPreview
+          prescription={viewingPrescription}
+          onBack={() => setViewingPrescription(null)}
+        />
       )}
     </div>
   );

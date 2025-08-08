@@ -6,7 +6,8 @@
     "mobile": "9876543210",
     "date": "2025-08-01",
     "time": "10:00",
-    "status": "confirmed"
+    "status": "confirmed",
+    "patientId": "pat-1"
   },
   {
     "id": "2",
@@ -15,7 +16,8 @@
     "mobile": "9123456789",
     "date": "2025-08-01",
     "time": "11:00",
-    "status": "waiting"
+    "status": "waiting",
+    "patientId": "pat-2"
   },
   {
     "id": "3",
@@ -24,6 +26,7 @@
     "mobile": "9876512345",
     "date": "2025-08-01",
     "time": "12:00",
-    "status": "rescheduled"
+    "status": "rescheduled",
+    "patientId": "pat-3"
   }
 ]

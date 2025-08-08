@@ -1,8 +1,13 @@
 'use client'
 import React, { useState, useEffect, useMemo } from 'react'
 import dynamic from 'next/dynamic'
-import { getAppointments, deleteAppointment, updateAppointment } from '@/lib/api'
-import { Appointment } from '@/types'
+import { getAppointments, deleteAppointment, updateAppointment } from '@/lib/api';
+import { Appointment } from '@/types';
+import { Prescription } from '@/types/prescription';
+import { PrescriptionPreview } from '@/components/PrescriptionPreview';
+import { AnimatePresence, motion } from 'framer-motion';
+import { PrescriptionForm } from '@/components/PrescriptionForm';
+import toast from 'react-hot-toast';
 
 // Dynamically import the calendar to prevent SSR hydration issues
 const DragDropCalendarView = dynamic(
@@ -20,6 +25,10 @@ const DragDropCalendarView = dynamic(
 export default function Page() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewingPrescriptions, setViewingPrescriptions] = useState<Prescription[] | null>(null);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   
   // Calculate appointment statistics
   const appointmentStats = useMemo(() => {
@@ -27,7 +36,7 @@ export default function Page() {
       confirmed: 0,
       waiting: 0,
       rescheduled: 0,
-      cancelled: 0,
+      canceled: 0,
       total: appointments.length
     };
     
@@ -80,8 +89,8 @@ export default function Page() {
       if (appointmentToUpdate) {
         const updatedAppointment = {
           ...appointmentToUpdate,
-          date: newDate,
-          time: newTime
+          startTime: newDate,
+          endTime: newTime
         };
         
         await updateAppointment(updatedAppointment);
@@ -103,7 +112,7 @@ export default function Page() {
       if (appointmentToUpdate) {
         const updatedAppointment = {
           ...appointmentToUpdate,
-          status: 'cancelled' as const
+          status: 'canceled' as const
         };
         
         await updateAppointment(updatedAppointment);
@@ -115,6 +124,62 @@ export default function Page() {
       }
     } catch (error) {
       console.error('Failed to cancel appointment:', error);
+    }
+  };
+
+  const handleViewPrescription = async (appointment: Appointment) => {
+    try {
+      // Fetch prescriptions for the selected patient
+      const response = await fetch(`/api/prescriptions?patientId=${appointment.patientId}`);
+      if (response.ok) {
+        const prescriptions = await response.json();
+        setViewingPrescriptions(prescriptions);
+        setSelectedAppointment(appointment);
+      } else {
+        console.error('Failed to fetch prescriptions');
+        setViewingPrescriptions([]);
+        setSelectedAppointment(appointment);
+      }
+    } catch (error) {
+      console.error('Error fetching prescriptions:', error);
+    }
+  };
+
+  const handleSavePrescription = async (prescriptionData: Partial<Prescription>) => {
+    setIsSaving(true);
+    try {
+      const response = await fetch('/api/prescriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...prescriptionData,
+          doctorId: 'doc-1',
+          doctorName: 'Dr. Smith',
+        }),
+      });
+
+      if (response.ok) {
+        toast.success('Prescription created successfully');
+        setShowPrescriptionForm(false);
+        // Refresh prescriptions for the current patient
+        if (selectedAppointment) {
+          const response = await fetch(`/api/prescriptions?patientId=${selectedAppointment.patientId}`);
+          if (response.ok) {
+            const prescriptions = await response.json();
+            setViewingPrescriptions(prescriptions);
+          }
+        }
+      } else {
+        const errorData = await response.json();
+        toast.error(`Failed to create prescription: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('Error saving prescription:', error);
+      toast.error('Error saving prescription');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -229,9 +294,9 @@ export default function Page() {
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/50 hover:shadow-xl transition-all duration-300">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Cancelled</p>
+                  <p className="text-sm font-medium text-gray-600">Canceled</p>
                   <p className="text-3xl font-bold bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">
-                    {appointmentStats.cancelled}
+                    {appointmentStats.canceled}
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-gradient-to-r from-red-100 to-red-200 rounded-xl flex items-center justify-center">
@@ -252,8 +317,100 @@ export default function Page() {
           onUpdate={loadAppointments}
           onAppointmentMove={handleAppointmentMove}
           onAppointmentCancel={handleAppointmentCancel}
+          onViewPrescription={handleViewPrescription}
         />
+        {/* Prescription Modal */}
+        <AnimatePresence>
+          {viewingPrescriptions && selectedAppointment && (
+            <motion.div
+              className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+              >
+                <div className="p-6 border-b flex justify-between items-center">
+                 <div>
+                   <h2 className="text-2xl font-bold text-gray-800">
+                     Prescriptions for {selectedAppointment.name}
+                   </h2>
+                   <p className="text-gray-600">
+                     Patient ID: {selectedAppointment.patientId}
+                   </p>
+                 </div>
+                 <button
+                   onClick={() => setShowPrescriptionForm(true)}
+                   className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-sky-600 text-white rounded-2xl hover:from-blue-700 hover:to-sky-700 transition-all duration-300 shadow-lg hover:shadow-xl font-medium"
+                 >
+                   Add New Prescription
+                 </button>
+               </div>
+
+                <div className="p-6 overflow-y-auto space-y-4">
+                  {viewingPrescriptions.length > 0 ? (
+                    viewingPrescriptions.map((prescription) => (
+                      <PrescriptionPreview
+                        key={prescription.id}
+                        prescription={prescription}
+                        showActions={false}
+                      />
+                    ))
+                  ) : (
+                    <div className="text-center py-12">
+                      <p className="text-gray-500">
+                        No prescriptions found for this patient.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-6 border-t mt-auto">
+                  <button
+                    onClick={() => setViewingPrescriptions(null)}
+                    className="w-full px-4 py-3 bg-gray-100 text-gray-700 rounded-2xl hover:bg-gray-200 transition-all duration-300 font-medium"
+                  >
+                    Close
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Add/Edit Form Modal */}
+        <AnimatePresence>
+          {showPrescriptionForm && selectedAppointment && (
+            <motion.div
+              className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 overflow-y-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="w-full max-w-2xl"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <PrescriptionForm
+                  prescription={{
+                    patientId: selectedAppointment.patientId,
+                    patientName: selectedAppointment.name,
+                  }}
+                  onSave={handleSavePrescription}
+                  onCancel={() => setShowPrescriptionForm(false)}
+                  isLoading={isSaving}
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </main>
-  )
+  );
 }

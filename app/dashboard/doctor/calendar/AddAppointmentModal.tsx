@@ -17,12 +17,12 @@ const AddAppointmentModal = ({ isOpen, onClose, selectedDay, selectedTime }: Pro
   const handleSubmit = async () => {
     const newAppointment = {
       id: uuidv4(),
-      doctorId: 'doc1',
-      patientName: name,
-      patientAge: Number(age),
-      patientMobile: mobile,
-      date: selectedDay,
-      time: selectedTime,
+      name: name,
+      phone: mobile,
+      startTime: new Date(`${selectedDay}T${selectedTime}`).toISOString(),
+      endTime: new Date(new Date(`${selectedDay}T${selectedTime}`).getTime() + 30 * 60 * 1000).toISOString(),
+      status: 'upcoming',
+      patientId: `pat-${Date.now()}`,
     };
 
     await fetch('/api/appointments', {

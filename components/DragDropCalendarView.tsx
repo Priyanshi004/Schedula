@@ -18,10 +18,9 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Appointment } from '@/types';
-
+import { FaFileMedical } from 'react-icons/fa';
 interface CalendarAppointment extends Appointment {
-  startTime: number; // hour in 24h format
-  duration: number; // duration in hours
+  time: string; // hour in 24h format
   dayIndex: number; // 0-6 for Sun-Sat
 }
 
@@ -30,6 +29,7 @@ interface DraggableAppointmentProps {
   onEdit: () => void;
   onDelete: () => void;
   onCancel: () => void;
+  onViewPrescription: () => void;
 }
 
 const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
@@ -37,6 +37,7 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
   onEdit,
   onDelete,
   onCancel,
+  onViewPrescription,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -62,13 +63,13 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'confirmed':
-        return 'bg-gradient-to-r from-blue-600 to-blue-700 border-blue-500 shadow-blue-300';
+        return 'bg-gradient-to-r from-green-600 to-green-700 border-green-500 shadow-green-300';
       case 'waiting':
-        return 'bg-gradient-to-r from-sky-500 to-cyan-600 border-sky-400 shadow-sky-200';
+        return 'bg-gradient-to-r from-yellow-500 to-yellow-600 border-yellow-400 shadow-yellow-200';
       case 'rescheduled':
-        return 'bg-gradient-to-r from-indigo-600 to-purple-700 border-indigo-500 shadow-indigo-300';
-      case 'cancelled':
-        return 'bg-gradient-to-r from-red-500 to-red-600 border-red-400 shadow-red-200 opacity-75';
+        return 'bg-gradient-to-r from-red-500 to-red-600 border-red-400 shadow-red-200';
+      case 'canceled':
+        return 'bg-gradient-to-r from-gray-500 to-gray-600 border-gray-400 shadow-gray-200 opacity-75';
       default:
         return 'bg-gradient-to-r from-slate-600 to-gray-700 border-slate-500 shadow-slate-300';
     }
@@ -100,18 +101,30 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
           <span className="w-2 h-2 bg-white bg-opacity-60 rounded-full"></span>
           {appointment.name}
         </div>
-        {appointment.status !== 'cancelled' && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onCancel();
-            }}
-            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-white/20 rounded text-xs"
-            title="Cancel appointment"
-          >
-            ✕
-          </button>
-        )}
+          <div className="flex items-center">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onViewPrescription();
+              }}
+              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-white/20 rounded text-xs"
+              title="View Prescriptions"
+            >
+              <FaFileMedical />
+            </button>
+            {appointment.status !== 'canceled' && appointment.status !== 'rescheduled' && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onCancel();
+                }}
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 hover:bg-white/20 rounded text-xs"
+                title="Cancel appointment"
+              >
+                ✕
+              </button>
+            )}
+          </div>
       </div>
       <div className="truncate opacity-90 text-xs mt-1">{appointment.time}</div>
       
@@ -128,15 +141,13 @@ const DraggableAppointment: React.FC<DraggableAppointmentProps> = ({
             <div className="text-sm space-y-1">
               <div className="font-semibold text-blue-300">{appointment.name}</div>
               <div className="text-gray-300">
-                <div>📅 {appointment.date}</div>
                 <div>🕐 {appointment.time}</div>
-                <div>👤 Age: {appointment.age}</div>
-                <div>📱 {appointment.mobile}</div>
                 <div className="flex items-center gap-2 mt-2">
                   <span className={`w-2 h-2 rounded-full ${
                     appointment.status === 'confirmed' ? 'bg-green-400' :
                     appointment.status === 'waiting' ? 'bg-yellow-400' :
-                    appointment.status === 'rescheduled' ? 'bg-blue-400' : 'bg-gray-400'
+                    appointment.status === 'rescheduled' ? 'bg-red-400' :
+                    appointment.status === 'canceled' ? 'bg-gray-400' : 'bg-gray-400'
                   }`}></span>
                   <span className="capitalize">{appointment.status}</span>
                 </div>
@@ -157,12 +168,13 @@ interface TimeSlotProps {
   onEdit: (appointment: CalendarAppointment) => void;
   onDelete: (appointment: CalendarAppointment) => void;
   onCancel: (appointment: CalendarAppointment) => void;
+  onViewPrescription: (appointment: CalendarAppointment) => void;
   onDrop?: (appointmentId: string, newHour: number, newDayIndex: number) => void;
 }
 
-const TimeSlot: React.FC<TimeSlotProps> = ({ hour, dayIndex, appointments, onEdit, onDelete, onCancel, onDrop }) => {
+const TimeSlot: React.FC<TimeSlotProps> = ({ hour, dayIndex, appointments, onEdit, onDelete, onCancel, onViewPrescription, onDrop }) => {
   const slotAppointments = appointments.filter(
-    (apt) => apt.dayIndex === dayIndex && apt.startTime === hour
+    (apt) => apt.dayIndex === dayIndex && parseInt(apt.time) === hour
   );
 
   const isCurrentHour = new Date().getHours() === hour;
@@ -206,6 +218,7 @@ const TimeSlot: React.FC<TimeSlotProps> = ({ hour, dayIndex, appointments, onEdi
           onEdit={() => onEdit(appointment)}
           onDelete={() => onDelete(appointment)}
           onCancel={() => onCancel(appointment)}
+          onViewPrescription={() => onViewPrescription(appointment)}
         />
       ))}
     </div>
@@ -219,6 +232,7 @@ interface DragDropCalendarViewProps {
   onUpdate: () => void;
   onAppointmentMove?: (appointmentId: string, newDate: string, newTime: string) => void;
   onAppointmentCancel?: (appointmentId: string) => void;
+  onViewPrescription?: (appointment: Appointment) => void;
 }
 
 const DragDropCalendarView: React.FC<DragDropCalendarViewProps> = ({
@@ -228,6 +242,7 @@ const DragDropCalendarView: React.FC<DragDropCalendarViewProps> = ({
   onUpdate,
   onAppointmentMove,
   onAppointmentCancel,
+  onViewPrescription,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [activeAppointment, setActiveAppointment] = useState<CalendarAppointment | null>(null);
@@ -247,33 +262,23 @@ const DragDropCalendarView: React.FC<DragDropCalendarViewProps> = ({
   useEffect(() => {
     setIsMounted(true);
     const convertedAppointments: CalendarAppointment[] = appointments.map((apt) => {
-      const timeMatch = apt.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-      let startTime = 9; // default to 9 AM
+      const timeSource = apt.startTime || apt.time;
+      const timeMatch = timeSource ? timeSource.match(/(\d{1,2}):(\d{2})/) : null;
+      let time = 9; // default to 9 AM
       
       if (timeMatch) {
         let hour = parseInt(timeMatch[1]);
         const minute = parseInt(timeMatch[2]);
-        const period = timeMatch[3].toUpperCase();
         
-        if (period === 'PM' && hour !== 12) hour += 12;
-        if (period === 'AM' && hour === 12) hour = 0;
-        
-        startTime = hour;
+        time = hour;
       }
 
       // Parse date to get day of week (deterministic, no random)
       let dayIndex = 1; // Default to Monday
       try {
-        const dateMatch = apt.date.match(/(\d{4})-(\d{2})-(\d{2})/);
-        if (dateMatch) {
-          const date = new Date(dateMatch[0]);
-          dayIndex = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
-        } else {
-          // Try other date formats
-          const date = new Date(apt.date);
-          if (!isNaN(date.getTime())) {
-            dayIndex = date.getDay();
-          }
+        const date = new Date(apt.startTime || apt.date || '');
+        if (!isNaN(date.getTime())) {
+          dayIndex = date.getDay();
         }
       } catch (error) {
         // Use a deterministic fallback based on appointment ID
@@ -282,8 +287,7 @@ const DragDropCalendarView: React.FC<DragDropCalendarViewProps> = ({
 
       return {
         ...apt,
-        startTime,
-        duration: 1, // 1 hour default
+        time: `${time}:00`,
         dayIndex,
       };
     });
@@ -307,35 +311,44 @@ const DragDropCalendarView: React.FC<DragDropCalendarViewProps> = ({
     const draggedAppointment = calendarAppointments.find(apt => apt.id === active.id);
     if (!draggedAppointment) return;
 
-    const [newHour, newDayIndex] = over.id.toString().split('-').map(Number);
-    
-    if (newHour !== draggedAppointment.startTime || newDayIndex !== draggedAppointment.dayIndex) {
-      const newDate = new Date(2024, 0, newDayIndex + 1).toISOString().split('T')[0];
-      const newTime = `${newHour === 0 ? '12:00 AM' : 
-                      newHour < 12 ? `${newHour}:00 AM` : 
-                      newHour === 12 ? '12:00 PM' : 
-                      `${newHour - 12}:00 PM`}`;
-      
-      // Update the appointment position
-      const updatedAppointments = calendarAppointments.map(apt => {
-        if (apt.id === active.id) {
-          return {
-            ...apt,
-            startTime: newHour,
-            dayIndex: newDayIndex,
-            time: newTime,
-            date: newDate
-          };
+    if (over.id.toString().startsWith('slot-')) {
+        const [, dayIndexStr, hourStr] = over.id.toString().split('-');
+        const newDayIndex = parseInt(dayIndexStr, 10);
+        const newHour = parseInt(hourStr, 10);
+
+        const targetSlotOccupied = calendarAppointments.some(
+            (apt) => apt.dayIndex === newDayIndex && parseInt(apt.time) === newHour && apt.id !== active.id
+        );
+
+        if (targetSlotOccupied) {
+            return;
         }
-        return apt;
-      });
-      
-      setCalendarAppointments(updatedAppointments);
-      
-      // Call the move callback if provided
-      if (onAppointmentMove) {
-        onAppointmentMove(active.id as string, newDate, newTime);
-      }
+
+        if (newHour !== parseInt(draggedAppointment.time) || newDayIndex !== draggedAppointment.dayIndex) {
+            const currentDate = new Date();
+            const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), newDayIndex + 1).toISOString().split('T')[0];
+            const newTime = `${newHour === 0 ? '12:00 AM' :
+                              newHour < 12 ? `${newHour}:00 AM` :
+                              newHour === 12 ? '12:00 PM' :
+                              `${newHour - 12}:00 PM`}`;
+
+            const updatedAppointments = calendarAppointments.map(apt => {
+                if (apt.id === active.id) {
+                    return {
+                        ...apt,
+                        time: newTime,
+                        dayIndex: newDayIndex,
+                    };
+                }
+                return apt;
+            });
+
+            setCalendarAppointments(updatedAppointments);
+
+            if (onAppointmentMove) {
+                onAppointmentMove(active.id as string, newDate, newTime);
+            }
+        }
     }
   };
 
@@ -348,7 +361,7 @@ const DragDropCalendarView: React.FC<DragDropCalendarViewProps> = ({
       // Update appointment status to cancelled locally for immediate UI feedback
       const updatedAppointments = calendarAppointments.map(apt => {
         if (apt.id === cancelConfirm.appointment!.id) {
-          return { ...apt, status: 'cancelled' as const };
+          return { ...apt, status: 'canceled' as const };
         }
         return apt;
       });
@@ -441,6 +454,7 @@ const DragDropCalendarView: React.FC<DragDropCalendarViewProps> = ({
                         onEdit={onEdit}
                         onDelete={onDelete}
                         onCancel={handleCancelAppointment}
+                        onViewPrescription={onViewPrescription as any}
                       />
                     </div>
                   ))}

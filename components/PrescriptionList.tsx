@@ -9,6 +9,7 @@ interface PrescriptionListProps {
   prescriptions: Prescription[];
   onEdit: (prescription: Prescription) => void;
   onDelete: (id: string) => void;
+  onView: (prescription: Prescription) => void;
   grouping: 'patient' | 'appointment';
 }
 
@@ -16,6 +17,7 @@ export function PrescriptionList({
   prescriptions,
   onEdit,
   onDelete,
+  onView,
   grouping
 }: PrescriptionListProps) {
   const [groupedPrescriptions, setGroupedPrescriptions] = useState<Record<string, Prescription[]>>({});
@@ -61,6 +63,7 @@ export function PrescriptionList({
                 prescription={prescription}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                onView={onView}
               />
             ))}
           </div>

@@ -1,7 +1,5 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { InventoryItem } from '@/types/indexs';
-
 const filePath = path.join(process.cwd(), 'data', 'inventory.json');
 
 export const getInventoryItems = async (): Promise<InventoryItem[]> => {

@@ -1,10 +1,20 @@
 export type Appointment = {
   id: string;
-  doctorId: string;
-  age: string;
-  mobile: string;
-  date: string;
-  time: string;
-  status: 'confirmed' | 'waiting' | 'rescheduled' | 'cancelled';
-  name:string
+  name: string;
+  phone: string;
+  email?: string;
+  start: Date;
+  end: Date;
+  startTime: string;
+  endTime: string;
+  status: 'confirmed' | 'waiting' | 'rescheduled' | 'canceled';
+  notes?: string;
+  patientId: string;
+  doctorName?: string;
+  specialty?: string;
+  date?: string;
+  time?: string;
+  age:number;
+  mobile?: string;
+  doctorId: string; 
 };

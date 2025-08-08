@@ -16,9 +16,13 @@ import {
   FaMoneyBillWave,
   FaStethoscope,
   FaArrowLeft,
-  FaPlus
+  FaPlus,
+  FaFileMedical
 } from 'react-icons/fa';
 import Link from 'next/link';
+import BottomNavigation from '@/components/BottomNavigation';
+import { Prescription } from '@/types/prescription';
+import { PrescriptionPreview } from '@/components/PrescriptionPreview';
 
 type Appointment = {
   id?: string;
@@ -38,6 +42,7 @@ type Appointment = {
   doctorImage?: string;
   problem?: string;
   relation?: string;
+  patientId?: string;
 };
 
 const TABS = ['upcoming', 'completed', 'canceled'] as const;
@@ -47,6 +52,7 @@ export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [showCancelModal, setShowCancelModal] = useState<string | null>(null);
   const [showRescheduleModal, setShowRescheduleModal] = useState<string | null>(null);
+  const [viewingPrescription, setViewingPrescription] = useState<Prescription | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -75,7 +81,8 @@ export default function AppointmentsPage() {
         specialty: 'Cardiologist',
         doctorImage: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face',
         problem: 'Chest pain and irregular heartbeat',
-        relation: 'Self'
+        relation: 'Self',
+        patientId: 'pat-1'
       },
       {
         id: 'demo-2',
@@ -93,7 +100,8 @@ export default function AppointmentsPage() {
         specialty: 'Orthopedic',
         doctorImage: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face',
         problem: 'Back pain and joint stiffness',
-        relation: 'Self'
+        relation: 'Self',
+        patientId: 'pat-2'
       },
       {
         id: 'demo-3',
@@ -111,7 +119,8 @@ export default function AppointmentsPage() {
         specialty: 'Dermatologist',
         doctorImage: 'https://images.unsplash.com/photo-1594824947933-d0501ba2fe65?w=150&h=150&fit=crop&crop=face',
         problem: 'Skin rash and allergies',
-        relation: 'Self'
+        relation: 'Self',
+        patientId: 'pat-3'
       }
     ];
     
@@ -199,16 +208,32 @@ export default function AppointmentsPage() {
     toast.info('Reschedule feature coming soon!');
   };
 
+  const handleViewPrescription = async (appointment: Appointment) => {
+    try {
+      const response = await fetch(`/api/prescriptions?patientId=${appointment.patientId}`);
+      if (response.ok) {
+        const prescriptions = await response.json();
+        if (prescriptions.length > 0) {
+          setViewingPrescription(prescriptions[0]);
+        } else {
+          toast.error('No prescription found for this appointment.');
+        }
+      } else {
+        toast.error('Failed to fetch prescription.');
+      }
+    } catch (error) {
+      toast.error('An error occurred while fetching the prescription.');
+    }
+  };
+
   const filteredAppointments = appointments.filter(apt => {
     const status = apt.status === 'Confirmed' ? 'upcoming' : apt.status;
     return status === tab;
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-100">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-sky-600/5 to-indigo-600/5"></div>
-      
-      <div className="relative">
+    <div className="bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-100">
+      <div className="relative pb-24">
         {/* Header */}
         <div className="bg-white/80 backdrop-blur-sm border-b border-white/50 sticky top-0 z-10">
           <div className="max-w-4xl mx-auto px-4 py-6">
@@ -374,6 +399,15 @@ export default function AppointmentsPage() {
 
                     {/* Action Buttons */}
                     <div className="flex gap-3">
+                      <motion.button
+                        onClick={() => handleViewPrescription(appointment)}
+                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-cyan-600 to-teal-600 text-white font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <FaFileMedical className="text-sm" />
+                        View Prescription
+                      </motion.button>
                       {appointment.status === 'upcoming' && (
                         <>
                           <motion.button
@@ -398,16 +432,16 @@ export default function AppointmentsPage() {
                       )}
                       
                       {appointment.status === 'completed' && (
-                        <Link href="/doctors" className="flex-1">
-                          <motion.button
-                            className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            <FaPlus className="text-sm" />
-                            Book Again
-                          </motion.button>
-                        </Link>
+                          <Link href="/doctors" className="flex-1">
+                            <motion.button
+                              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              <FaPlus className="text-sm" />
+                              Book Again
+                            </motion.button>
+                          </Link>
                       )}
                       
                       {appointment.status === 'canceled' && (
@@ -504,6 +538,26 @@ export default function AppointmentsPage() {
           </div>
         )}
       </div>
+      <BottomNavigation />
+
+      {/* Prescription Modal */}
+      {viewingPrescription && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <motion.div
+            className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/50 w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="p-6 overflow-y-auto">
+              <PrescriptionPreview
+                prescription={viewingPrescription}
+                onBack={() => setViewingPrescription(null)}
+              />
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

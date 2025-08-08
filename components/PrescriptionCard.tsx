@@ -7,9 +7,10 @@ interface PrescriptionCardProps {
   prescription: Prescription;
   onEdit: (prescription: Prescription) => void;
   onDelete: (id: string) => void;
+  onView: (prescription: Prescription) => void;
 }
 
-export function PrescriptionCard({ prescription, onEdit, onDelete }: PrescriptionCardProps) {
+export function PrescriptionCard({ prescription, onEdit, onDelete, onView }: PrescriptionCardProps) {
   const handleEdit = () => {
     onEdit(prescription);
   };
@@ -73,20 +74,30 @@ export function PrescriptionCard({ prescription, onEdit, onDelete }: Prescriptio
         
         <div className="flex flex-col gap-2 ml-4">
           <button
-            onClick={handleEdit}
+            onClick={() => onEdit(prescription)}
             className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors duration-200"
             title="Edit prescription"
           >
             <FaEdit className="text-sm" />
           </button>
           <button
-            onClick={handleDelete}
+            onClick={() => onDelete(prescription.id)}
             className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors duration-200"
             title="Delete prescription"
           >
             <FaTrash className="text-sm" />
           </button>
         </div>
+      </div>
+      
+      {/* View Prescription Button */}
+      <div className="mt-4 pt-4 border-t border-gray-100">
+        <button
+          onClick={() => onView(prescription)}
+          className="w-full py-2 bg-gradient-to-r from-blue-500 to-sky-500 text-white rounded-lg hover:from-blue-600 hover:to-sky-600 transition-all duration-300 font-medium"
+        >
+          View Prescription
+        </button>
       </div>
     </div>
   );

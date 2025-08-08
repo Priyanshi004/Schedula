@@ -60,33 +60,49 @@ const PatientDetailsPage = () => {
     return newErrors.length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validate()) {
       setModalType('error');
       return;
     }
-    setModalType('confirm');
+    await confirmBooking();
   };
 
-  const confirmBooking = () => {
-    const appointments = JSON.parse(localStorage.getItem('appointments') || '[]');
+  const confirmBooking = async () => {
     const newAppointment = {
+      id: `apt-${Date.now()}`,
       name: form.name,
       age: form.age,
-      gender: form.gender,
-      problem: form.problem,
-      relation: form.relation,
-      mobile: form.mobile,
-      doctor: selectedAppointment?.doctorName || 'Unknown Doctor',
-      specialty: selectedAppointment?.specialty || 'General',
-      date: selectedAppointment?.date || 'TBD',
-      slot: selectedAppointment?.slot || 'TBD',
-      status: 'Confirmed',
+      phone: form.mobile,
+      email: '', // You may want to add an email field to your form
+      doctorName: selectedAppointment?.doctorName,
+      specialty: selectedAppointment?.specialty,
+      date: selectedAppointment?.date,
+      time: selectedAppointment?.slot,
+      notes: form.problem,
+      status: 'upcoming',
+      patientId: `pat-${Date.now()}`,
+      startTime: new Date().toISOString(),
     };
-    localStorage.setItem('appointments', JSON.stringify([...appointments, newAppointment]));
-    
-    toast.success('Appointment booked successfully!');
-    router.push('/appointments');
+
+    try {
+      const response = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newAppointment),
+      });
+
+      if (response.ok) {
+        toast.success('Appointment booked successfully!');
+        router.push('/appointments');
+      } else {
+        toast.error('Failed to book appointment.');
+      }
+    } catch (error) {
+      toast.error('An error occurred while booking the appointment.');
+    }
   };
 
   return (
