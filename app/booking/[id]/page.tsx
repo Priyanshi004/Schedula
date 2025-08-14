@@ -4,11 +4,11 @@ import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
-import { 
-  FaUserMd, 
-  FaCalendarAlt, 
-  FaClock, 
-  FaArrowLeft, 
+import {
+  FaUserMd,
+  FaCalendarAlt,
+  FaClock,
+  FaArrowLeft,
   FaCheckCircle,
   FaUser,
   FaEnvelope,
@@ -18,7 +18,8 @@ import {
   FaBrain,
   FaBone,
   FaTooth,
-  FaEye
+  FaEye,
+  FaStar
 } from 'react-icons/fa';
 import BottomNavigation from '@/components/BottomNavigation';
 
@@ -140,6 +141,7 @@ export default function DoctorBookingPage() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [notes, setNotes] = useState('')
+  const [newAppointmentId, setNewAppointmentId] = useState<string>('')
 
   if (!doctor) {
     return (
@@ -176,6 +178,7 @@ export default function DoctorBookingPage() {
       status: 'upcoming',
       patientId: `pat-${Date.now()}`,
     };
+    setNewAppointmentId(appointment.id);
 
     try {
       const response = await fetch('/api/appointments', {
@@ -525,6 +528,18 @@ export default function DoctorBookingPage() {
                 whileTap={{ scale: 0.98 }}
               >
                 Book Another
+              </motion.button>
+              <motion.button
+                onClick={() =>
+                  router.push(
+                    `/patients/review?appointmentId=${newAppointmentId}&doctorName=${doctor.name}&patientName=${name}`
+                  )
+                }
+                className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Write Review
               </motion.button>
             </div>
           </motion.div>

@@ -134,11 +134,13 @@ const DoctorDashboard = () => {
               <p className="text-green-100 text-sm">Schedule patient visit</p>
             </div>
 
-            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-6 text-white hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer">
-              <FaChartLine className="text-2xl mb-3" />
-              <h3 className="font-semibold mb-1">Analytics</h3>
-              <p className="text-purple-100 text-sm">View performance</p>
-            </div>
+            <Link href="/dashboard/doctor/reviews">
+              <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-6 text-white hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer">
+                <FaChartLine className="text-2xl mb-3" />
+                <h3 className="font-semibold mb-1">Patient Reviews</h3>
+                <p className="text-purple-100 text-sm">View patient feedback</p>
+              </div>
+            </Link>
           </div>
         </div>
 

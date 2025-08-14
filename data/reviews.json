@@ -1,0 +1,123 @@
+[
+  {
+    "id": "review-1755094400000",
+    "appointmentId": "1",
+    "patientId": "pat-1",
+    "patientName": "Priya Sharma",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 5,
+    "reviewText": "Excellent doctor! Very thorough examination and took time to explain everything. The clinic was clean and staff was friendly. Highly recommend!",
+    "createdAt": "2025-08-13T10:30:00.000Z",
+    "updatedAt": "2025-08-13T10:30:00.000Z"
+  },
+  {
+    "id": "review-1755094500000",
+    "appointmentId": "2",
+    "patientId": "pat-2",
+    "patientName": "Ravi Kumar",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 4,
+    "reviewText": "Good consultation. Doctor was knowledgeable but had to wait a bit longer than expected. Overall satisfied with the treatment.",
+    "createdAt": "2025-08-12T15:45:00.000Z",
+    "updatedAt": "2025-08-12T15:45:00.000Z"
+  },
+  {
+    "id": "review-1755094600000",
+    "appointmentId": "3",
+    "patientId": "pat-3",
+    "patientName": "Sneha Kapoor",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 5,
+    "reviewText": "Amazing experience! Dr. Rishi was very patient and understanding. The treatment was effective and I felt much better after the consultation.",
+    "createdAt": "2025-08-11T09:15:00.000Z",
+    "updatedAt": "2025-08-11T09:15:00.000Z"
+  },
+  {
+    "id": "review-1755094700000",
+    "appointmentId": "demo-1",
+    "patientId": "pat-1",
+    "patientName": "Priyanshi Sharma",
+    "doctorName": "Dr. Sonia Sharma",
+    "rating": 5,
+    "reviewText": "Outstanding care! Dr. Sonia explained my heart condition in detail and provided excellent treatment. The cardiologist team was very professional.",
+    "createdAt": "2025-08-10T14:20:00.000Z",
+    "updatedAt": "2025-08-10T14:20:00.000Z"
+  },
+  {
+    "id": "review-1755094800000",
+    "appointmentId": "demo-2",
+    "patientId": "pat-2",
+    "patientName": "Raj Mehta",
+    "doctorName": "Dr. Arjun Kapoor",
+    "rating": 4,
+    "reviewText": "Very good orthopedic doctor. Diagnosed my back pain quickly and prescribed effective treatment. The follow-up care was excellent.",
+    "createdAt": "2025-08-09T11:30:00.000Z",
+    "updatedAt": "2025-08-09T11:30:00.000Z"
+  },
+  {
+    "id": "review-1755094900000",
+    "appointmentId": "demo-3",
+    "patientId": "pat-3",
+    "patientName": "Sneha Verma",
+    "doctorName": "Dr. Priya Sharma",
+    "rating": 3,
+    "reviewText": "The dermatologist was professional but the consultation felt a bit rushed. The skin treatment was effective though.",
+    "createdAt": "2025-08-08T16:45:00.000Z",
+    "updatedAt": "2025-08-08T16:45:00.000Z"
+  },
+  {
+    "id": "review-1755155251513",
+    "appointmentId": "7",
+    "patientId": "pat-7",
+    "patientName": "Anjali Joshi",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 4,
+    "reviewText": "Great consultation! Dr. Rishi was very attentive and provided comprehensive care. Would definitely recommend to others.",
+    "createdAt": "2025-08-14T07:07:31.513Z",
+    "updatedAt": "2025-08-14T07:07:31.513Z"
+  },
+  {
+    "id": "review-new-1",
+    "appointmentId": "1",
+    "patientId": "pat-8",
+    "patientName": "Kiran Desai",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 5,
+    "reviewText": "Exceptional doctor! Very professional, took time to listen to all my concerns, and provided excellent treatment. Highly satisfied with the care received.",
+    "createdAt": "2025-08-14T08:00:00.000Z",
+    "updatedAt": "2025-08-14T08:00:00.000Z"
+  },
+  {
+    "id": "review-new-2",
+    "appointmentId": "2",
+    "patientId": "pat-9",
+    "patientName": "Vikram Singh",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 4,
+    "reviewText": "Good experience overall. Dr. Rishi is knowledgeable and the treatment was effective. The clinic staff was also very helpful.",
+    "createdAt": "2025-08-14T09:00:00.000Z",
+    "updatedAt": "2025-08-14T09:00:00.000Z"
+  },
+  {
+    "id": "review-new-3",
+    "appointmentId": "3",
+    "patientId": "pat-10",
+    "patientName": "Maya Gupta",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 5,
+    "reviewText": "Amazing doctor! Very caring and thorough in diagnosis. Explained everything clearly and made me feel comfortable throughout the consultation.",
+    "createdAt": "2025-08-14T10:00:00.000Z",
+    "updatedAt": "2025-08-14T10:00:00.000Z"
+  },
+  {
+    "id": "review-1755166415607",
+    "appointmentId": "demo-2",
+    "patientId": "pat-2",
+    "patientName": "Raj Mehta",
+    "doctorName": "Dr. Arjun Kapoor",
+    "rating": 4,
+    "reviewText": "Great experience with the orthopedic consultation. Dr. Arjun provided excellent care and treatment advice.",
+    "createdAt": "2025-08-14T10:13:35.607Z",
+    "updatedAt": "2025-08-14T10:13:35.608Z"
+  }
+]

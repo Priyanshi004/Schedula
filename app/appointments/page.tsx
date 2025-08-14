@@ -3,21 +3,22 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { 
-  FaCalendarAlt, 
-  FaClock, 
-  FaUserMd, 
-  FaPhone, 
-  FaCheckCircle, 
-  FaTimes, 
-  FaEdit, 
+import {
+  FaCalendarAlt,
+  FaClock,
+  FaUserMd,
+  FaPhone,
+  FaCheckCircle,
+  FaTimes,
+  FaEdit,
   FaTrash,
   FaUser,
   FaMoneyBillWave,
   FaStethoscope,
   FaArrowLeft,
   FaPlus,
-  FaFileMedical
+  FaFileMedical,
+  FaStar
 } from 'react-icons/fa';
 import Link from 'next/link';
 import BottomNavigation from '@/components/BottomNavigation';
@@ -432,6 +433,20 @@ export default function AppointmentsPage() {
                       )}
                       
                       {appointment.status === 'completed' && (
+                        <>
+                          <Link 
+                            href={`/patients/review?appointmentId=${appointment.id}&doctorName=${encodeURIComponent(appointment.doctor || appointment.doctorName || '')}&patientName=${encodeURIComponent(appointment.name)}`} 
+                            className="flex-1"
+                          >
+                            <motion.button
+                              className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                            >
+                              <FaStar className="text-sm" />
+                              Write Review
+                            </motion.button>
+                          </Link>
                           <Link href="/doctors" className="flex-1">
                             <motion.button
                               className="w-full flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
@@ -442,6 +457,7 @@ export default function AppointmentsPage() {
                               Book Again
                             </motion.button>
                           </Link>
+                        </>
                       )}
                       
                       {appointment.status === 'canceled' && (

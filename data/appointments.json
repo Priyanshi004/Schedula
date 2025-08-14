@@ -7,7 +7,8 @@
     "date": "2025-08-01",
     "time": "10:00",
     "status": "confirmed",
-    "patientId": "pat-1"
+    "patientId": "pat-1",
+    "doctorName": "Dr. Rishi Mehta"
   },
   {
     "id": "2",
@@ -17,7 +18,8 @@
     "date": "2025-08-01",
     "time": "11:00",
     "status": "waiting",
-    "patientId": "pat-2"
+    "patientId": "pat-2",
+    "doctorName": "Dr. Rishi Mehta"
   },
   {
     "id": "3",
@@ -27,6 +29,67 @@
     "date": "2025-08-01",
     "time": "12:00",
     "status": "rescheduled",
-    "patientId": "pat-3"
+    "patientId": "pat-3",
+    "doctorName": "Dr. Rishi Mehta"
+  },
+  {
+    "id": "demo-1",
+    "name": "Priyanshi Sharma",
+    "age": "23",
+    "mobile": "9876543210",
+    "date": "2025-08-06",
+    "time": "10:00",
+    "status": "confirmed",
+    "patientId": "pat-1",
+    "doctorName": "Dr. Sonia Sharma"
+  },
+  {
+    "id": "demo-2",
+    "name": "Raj Mehta",
+    "age": "35",
+    "mobile": "9876501234",
+    "date": "2025-07-20",
+    "time": "11:30",
+    "status": "confirmed",
+    "patientId": "pat-2",
+    "doctorName": "Dr. Arjun Kapoor"
+  },
+  {
+    "id": "demo-3",
+    "name": "Sneha Verma",
+    "age": "29",
+    "mobile": "9898989898",
+    "date": "2025-07-15",
+    "time": "14:00",
+    "status": "confirmed",
+    "patientId": "pat-3",
+    "doctorName": "Dr. Priya Sharma"
+  },
+  {
+    "id": "7",
+    "name": "Anjali Joshi",
+    "age": "28",
+    "mobile": "9765432180",
+    "date": "2025-08-14",
+    "time": "15:00",
+    "status": "confirmed",
+    "patientId": "pat-7",
+    "doctorName": "Dr. Rishi Mehta"
+  },
+  {
+    "id": "apt-1755167322074",
+    "name": "Priyanshi",
+    "age": "21",
+    "phone": "9996024560",
+    "email": "",
+    "doctorName": "Dr. Rishi Mehta",
+    "specialty": "Dermatologist",
+    "date": "05 Fri",
+    "time": "12:30 PM - 12:45 PM",
+    "notes": "",
+    "status": "upcoming",
+    "patientId": "pat-1755167322074",
+    "startTime": "2025-08-14T10:28:42.074Z",
+    "endTime": "2025-08-14T10:58:42.074Z"
   }
 ]
