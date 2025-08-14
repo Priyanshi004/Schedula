@@ -1,0 +1,79 @@
+[
+  {
+    "id": "review-1755094400000",
+    "appointmentId": "1",
+    "patientId": "pat-1",
+    "patientName": "Priya Sharma",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 5,
+    "reviewText": "Excellent doctor! Very thorough examination and took time to explain everything. The clinic was clean and staff was friendly. Highly recommend!",
+    "createdAt": "2024-08-13T10:30:00.000Z",
+    "updatedAt": "2024-08-13T10:30:00.000Z"
+  },
+  {
+    "id": "review-1755094500000",
+    "appointmentId": "2",
+    "patientId": "pat-2",
+    "patientName": "Ravi Kumar",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 4,
+    "reviewText": "Good consultation. Doctor was knowledgeable but had to wait a bit longer than expected. Overall satisfied with the treatment.",
+    "createdAt": "2024-08-12T15:45:00.000Z",
+    "updatedAt": "2024-08-12T15:45:00.000Z"
+  },
+  {
+    "id": "review-1755094600000",
+    "appointmentId": "3",
+    "patientId": "pat-3",
+    "patientName": "Sneha Kapoor",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 5,
+    "reviewText": "Amazing experience! Dr. Rishi was very patient and understanding. The treatment was effective and I felt much better after the consultation.",
+    "createdAt": "2024-08-11T09:15:00.000Z",
+    "updatedAt": "2024-08-11T09:15:00.000Z"
+  },
+  {
+    "id": "review-1755094700000",
+    "appointmentId": "4",
+    "patientId": "pat-4",
+    "patientName": "Arjun Singh",
+    "doctorName": "Dr. Sarah Johnson",
+    "rating": 3,
+    "reviewText": "Decent consultation. The doctor was professional but didn't spend much time explaining the diagnosis. Would like more detailed discussion next time.",
+    "createdAt": "2024-08-10T14:20:00.000Z",
+    "updatedAt": "2024-08-10T14:20:00.000Z"
+  },
+  {
+    "id": "review-1755094800000",
+    "appointmentId": "5",
+    "patientId": "pat-5",
+    "patientName": "Meera Patel",
+    "doctorName": "Dr. Sarah Johnson",
+    "rating": 4,
+    "reviewText": "Very good doctor. Diagnosed my condition quickly and prescribed effective treatment. The follow-up care was excellent.",
+    "createdAt": "2024-08-09T11:30:00.000Z",
+    "updatedAt": "2024-08-09T11:30:00.000Z"
+  },
+  {
+    "id": "review-1755094900000",
+    "appointmentId": "6",
+    "patientId": "pat-6",
+    "patientName": "Rahul Gupta",
+    "doctorName": "Dr. Michael Chen",
+    "rating": 2,
+    "reviewText": "The consultation was rushed and I felt like my concerns weren't fully addressed. The clinic facilities could be improved.",
+    "createdAt": "2024-08-08T16:45:00.000Z",
+    "updatedAt": "2024-08-08T16:45:00.000Z"
+  },
+  {
+    "id": "review-1755155251513",
+    "appointmentId": "7",
+    "patientId": "pat-7",
+    "patientName": "Anjali Joshi",
+    "doctorName": "Dr. Rishi Mehta",
+    "rating": 4,
+    "reviewText": " c ckmsckl\n",
+    "createdAt": "2025-08-14T07:07:31.513Z",
+    "updatedAt": "2025-08-14T07:07:31.513Z"
+  }
+]
